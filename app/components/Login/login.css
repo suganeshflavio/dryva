@@ -1,27 +1,23 @@
 .PhoneInput {
-  display: flex;
-  align-items: center;
   border: 1px solid #d9d9d9;
   border-radius: 8px;
-  padding: 6px 10px;
-  transition: border-color 0.3s;
-  height: 40px;
+  padding: 4px 8px;
+  transition: border-color 0.2s;
 }
 
-.PhoneInput:hover,
+.PhoneInput:hover {
+  border-color: #1677ff;
+}
+
 .PhoneInput--focus {
   border-color: #1677ff;
 }
 
 .PhoneInputCountry {
+  padding-right: 8px;
   margin-right: 8px;
+  border-right: 1px solid #d9d9d9;
 }
-
-.PhoneInputCountrySelect {
-  border: none;
-  background: transparent;
-}
-
 .PhoneInputInput {
   height: 48px;
   font-size: 16px;

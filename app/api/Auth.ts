@@ -38,3 +38,49 @@ export async function registerPassenger(
 
   return response.json();
 }
+
+
+export interface RequestOtpPayload {
+  phone: string;
+  country_code: string;
+  passenger: boolean;
+}
+
+export interface VerifyOtpPayload {
+  phone: string;
+  otp: string;
+}
+
+export async function requestOtp(payload: RequestOtpPayload) {
+  const res = await fetch(`${url}/login/request-otp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error?.message || 'Failed to send OTP');
+  }
+
+  return res.json();
+}
+
+export async function verifyOtp(payload: VerifyOtpPayload) {
+  const res = await fetch(`${url}/login/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error?.message || 'OTP verification failed');
+  }
+
+  return res.json();
+}

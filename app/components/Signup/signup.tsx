@@ -1,6 +1,6 @@
 'use client';
 
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Form, Input, Button, Select, Typography, message } from 'antd';
 import Image from 'next/image';
 import { registerPassenger } from '@/app/api/Auth';
@@ -14,37 +14,37 @@ const { Option } = Select;
 
 export default function SignupPage() {
   const [form] = Form.useForm();
-  const [ loading, setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const onFinish = async (values: any) => {
     const phone = parsePhoneNumber(values.mobile || '');
     console.log('Signup Data:', values);
     setLoading(true);
-     try {
-    const payload = {
-      first_name: values.firstName,
-      last_name: values.lastName,
-      email: values.email,
-      phone: phone?.nationalNumber,
-      flag_code: phone?.country,
-      country_code: `+${phone?.countryCallingCode}`,
-      pickup: {
-        lat: 11.0096912,
-        lng: 77.0282813,
-      },
-    };
+    try {
+      const payload = {
+        first_name: values.firstName,
+        last_name: values.lastName,
+        email: values.email,
+        phone: phone?.nationalNumber,
+        flag_code: phone?.country,
+        country_code: `+${phone?.countryCallingCode}`,
+        pickup: {
+          lat: 11.0096912,
+          lng: 77.0282813,
+        },
+      };
 
-    await registerPassenger(payload);
-    message.success('Registration successful');
-    setLoading(false);
-    router.push('/login');
-    form.resetFields();
-  } catch (error: unknown) {
-    message.error(error instanceof Error ? error.message : 'Something went wrong');
-    setLoading(false);
-  } finally {
-    setLoading(false);
-  }
+      await registerPassenger(payload);
+      message.success('Registration successful');
+      setLoading(false);
+      router.push('/login');
+      form.resetFields();
+    } catch (error: unknown) {
+      message.error(error instanceof Error ? error.message : 'Something went wrong');
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
 
   };
 
@@ -120,7 +120,7 @@ export default function SignupPage() {
             animation: 'slideFromRight 1s ease forwards',
           }}
         >
-          <div style={{ width: '100%', maxWidth: 420,  height: '70%' }}>
+          <div style={{ width: '100%', maxWidth: 420, height: '70%' }}>
             <Title level={2}>Welcome to Dryva</Title>
             <Text type="secondary">
               Create your account to get started
@@ -139,7 +139,7 @@ export default function SignupPage() {
                   { required: true, message: 'Please enter first name' },
                 ]}
               >
-                <Input size="large" placeholder='Enter First Name'/>
+                <Input size="large" placeholder='Enter First Name' />
               </Form.Item>
 
               <Form.Item
@@ -149,7 +149,7 @@ export default function SignupPage() {
                   { required: true, message: 'Please enter last name' },
                 ]}
               >
-                <Input size="large" placeholder='Enter Last Name'/>
+                <Input size="large" placeholder='Enter Last Name' />
               </Form.Item>
 
               <Form.Item
@@ -160,7 +160,7 @@ export default function SignupPage() {
                   { type: 'email', message: 'Enter a valid email' },
                 ]}
               >
-                <Input size="large" placeholder='Enter Email'/>
+                <Input size="large" placeholder='Enter Email' />
               </Form.Item>
 
               <Form.Item
@@ -172,12 +172,14 @@ export default function SignupPage() {
                   //   pattern: /^[0-9]{10}$/,
                   //   message: 'Enter a valid 10-digit number',
                   // },
-                  {validator: (_, value) =>
-                            value && isValidPhoneNumber(value)
-                              ? Promise.resolve()
-                              : Promise.reject(
-                                  new Error('Enter a valid mobile number')
-                                ),}
+                  {
+                    validator: (_, value) =>
+                      value && isValidPhoneNumber(value)
+                        ? Promise.resolve()
+                        : Promise.reject(
+                          new Error('Enter a valid mobile number')
+                        ),
+                  }
                 ]}
               >
                 {/* <Input size="large" maxLength={10} placeholder='Enter Number'/> */}
@@ -201,18 +203,18 @@ export default function SignupPage() {
       });
     }}
   /> */}
-   <PhoneInput
-    international
-    defaultCountry="JM"
-    countryCallingCodeEditable={false}
-    value={form.getFieldValue('mobile')}
-    onChange={(value) => {
-      form.setFieldsValue({
-        mobile: value,
-      });
-    }}
-    // inputComponent={CustomAntdInput}
-  />
+                <PhoneInput
+                  international
+                  defaultCountry="JM"
+                  countryCallingCodeEditable={false}
+                  value={form.getFieldValue('mobile')}
+                  onChange={(value) => {
+                    form.setFieldsValue({
+                      mobile: value,
+                    });
+                  }}
+                // inputComponent={CustomAntdInput}
+                />
               </Form.Item>
               <Form.Item
                 name="age"
@@ -222,18 +224,18 @@ export default function SignupPage() {
                 ]}
               >
                 <Select size="large" placeholder="Select Age">
-                    <Option value="20 to 30">
-                      20 to 30
-                    </Option>
-                    <Option value="30 to 40">
-                      30 to 40
-                    </Option>
-                    <Option value="40 to 50">
-                      40 to 50
-                    </Option>
-                    <Option value="50 +">
-                      50 +
-                    </Option>
+                  <Option value="20 to 30">
+                    20 to 30
+                  </Option>
+                  <Option value="30 to 40">
+                    30 to 40
+                  </Option>
+                  <Option value="40 to 50">
+                    40 to 50
+                  </Option>
+                  <Option value="50 +">
+                    50 +
+                  </Option>
                 </Select>
               </Form.Item>
 
@@ -242,7 +244,7 @@ export default function SignupPage() {
                 htmlType="submit"
                 size="large"
                 block
-                loading ={loading}
+                loading={loading}
                 style={{ marginTop: 16, background: '#fe9900' }}
               >
                 Sign Up
