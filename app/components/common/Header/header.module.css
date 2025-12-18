@@ -1,0 +1,106 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 40px;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+
+.dark {
+  background: #000;
+  color: #fff;
+}
+
+.logo {
+  /* font-size: 22px;
+  font-weight: 700; */
+  /* color: #ffa500; */
+  /* margin-bottom: 5px; */
+  margin-left: 50px;
+}
+
+.nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+/* Hover: yellow bg + black text */
+.navLink:hover {
+  /* background-color: #fe9900; */
+  color: #fe9900;
+}
+.navLink {
+  position: relative;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.25s ease;
+}
+/* Bottom yellow line (focus / active) */
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background-color: #fe9900;
+  transition: width 0.25s ease;
+}
+
+/* Focus via keyboard */
+.navLink:focus-visible::after,
+.navLink.active::after {
+  width: 100%;
+}
+
+/* Optional: current route highlight */
+.navLink.active {
+  color: #fe9900;
+}
+
+.nav a {
+  color: inherit;
+}
+
+.mobileMenu {
+  display: none;
+  font-size: 22px;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+  .mobileMenu {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.signupBtn {
+  background-color: #fe9900 !important;
+  border-color: #fe9900 !important;
+  color: #000 !important;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px 22px;
+  height: 40px;
+  border-radius: 8px;
+
+  transition: all 0.25s ease;
+}
+
+.signupBtn:hover {
+  background-color: #ffb340 !important;
+  border-color: #ffb340 !important;
+  color: #000 !important;
+  /* transform: translateY(-1px); */
+  box-shadow: 0 0px 0px rgba(254, 153, 0, 0.35);
+}

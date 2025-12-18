@@ -1,0 +1,163 @@
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 60px 100px 40px;
+  background: radial-gradient(#111, #000);
+  color: #fff;
+    /* padding-left:100px;
+    padding-right:100px; */
+   background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.75)
+    ),
+    url("/images/bg.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.left {
+  flex: 1;
+  /* max-width: 520px; */
+}
+
+/* Small label on top */
+/* .tagline {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #fe9900;
+  font-weight: 600;
+  margin-bottom: 18px;
+} */
+
+/* Main heading */
+.title {
+  font-size: 56px;
+  line-height: 1.4;
+  font-weight: 700;
+  margin-bottom: 36px;
+  color: #ffffff;
+}
+
+/* Search + Button wrapper */
+.searchBox {
+  display: flex;
+  gap: 14px;
+  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* AntD Select styling */
+.select {
+  width: 580px;
+}
+
+.select :global(.ant-select-selector) {
+  height: 48px !important;
+  border-radius: 8px !important;
+  font-size: 16px;
+}
+
+/* CTA button
+.ctaBtn {
+  height: 48px;
+  padding: 0 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  background-color: #fe9900 !important;
+  border-color: #fe9900 !important;
+  color: #000 !important;
+  transition: all 0.25s ease;
+}
+
+.ctaBtn:hover {
+  background-color: #ffb340 !important;
+  border-color: #ffb340 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(254, 153, 0, 0.35);
+} */
+
+
+.right {
+    /* margin-right: 10px; */
+  flex: 1;
+  position: relative;
+  height: 500px;
+  /* Fast entrance */
+  animation: slideFromRight 1.1s cubic-bezier(.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes slideFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(120vw); /* completely off screen */
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateX(-6px); /* slight overshoot */
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.right img {
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .right {
+    width: 100%;
+    margin-top: 30px;
+    height: 260px;
+    animation-duration: 0.25s;
+  }
+
+  .left h1 {
+    font-size: 32px;
+  }
+}
+
+.signupBtn {
+  background-color: #fe9900 !important;
+  border-color: #fe9900 !important;
+  color: #000 !important;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px 22px;
+  border-radius: 8px;
+  margin-top: 15px;
+  height: 50px;
+  width: 50%;
+  transition: all 0.25s ease;
+}
+
+.signupBtn:hover {
+  background-color: #ffb340 !important;
+  border-color: #ffb340 !important;
+  color: #000 !important;
+  /* transform: translateY(-1px); */
+  box-shadow: 0 0px 0px rgba(254, 153, 0, 0.35);
+}
+
+
+
+
+
+
+
+
