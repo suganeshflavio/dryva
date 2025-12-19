@@ -56,28 +56,28 @@ const functionStyles: DropdownProps['styles'] = (info) => {
 };
 
 export default function Header() {
-   const sharedProps: DropdownProps = {
+  const sharedProps: DropdownProps = {
     menu: { items },
     placement: 'bottomLeft',
     classNames: { root: styles.root },
   };
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-    const token = typeof window !== "undefined" ? sessionStorage.getItem("token")  : null;
+  const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
 
   const router = useRouter();
-    const NavSignup = () => {
-        router.push("/signup");
-    };
+  const NavSignup = () => {
+    router.push("/signup");
+  };
   return (
     <header className={`${styles.header} ${darkMode ? styles.dark : ""}`}>
       <div className={styles.logo}>
-        <Image
+        <Link href="/"><Image
           src="/images/dryva-logo.svg"
           alt="Dryva"
           width={100}
           height={50}
-        />
+        /></Link>
       </div>
 
       {/* Desktop Menu */}
@@ -85,34 +85,34 @@ export default function Header() {
         <Link href="/" className={styles.navLink}>Home</Link>
         <Link href="/about" className={styles.navLink}>About Us</Link>
         <Link href="/faq" className={styles.navLink}>FAQ</Link>
-       {!token ?
-<>
-       <Link href="/login" className={styles.navLink}>Login</Link>
-        <Button className={styles.signupBtn} onClick={NavSignup}>Sign Up</Button>
-        </>
-:
-        // <Switch
-        //   checked={darkMode}
-        //   onChange={() => setDarkMode(!darkMode)}
-        //   style={{visibility:'hidden'}}
-        // />
-<Dropdown {...sharedProps} styles={functionStyles} trigger={['click']}>
-          <Button type="primary" className={styles.signupBtn}>
-            <Space>
-              {/* <UserOutlined /> */}
-              Username
-              <DownOutlined />
-            </Space>
-          </Button>
-        </Dropdown>
-}
+        {!token ?
+          <>
+            <Link href="/login" className={styles.navLink}>Login</Link>
+            <Button className={styles.signupBtn} onClick={NavSignup}>Sign Up</Button>
+          </>
+          :
+          // <Switch
+          //   checked={darkMode}
+          //   onChange={() => setDarkMode(!darkMode)}
+          //   style={{visibility:'hidden'}}
+          // />
+          <Dropdown {...sharedProps} styles={functionStyles} trigger={['click']}>
+            <Button type="primary" className={styles.signupBtn}>
+              <Space>
+                {/* <UserOutlined /> */}
+                Username
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+        }
       </nav>
       {/* Mobile */}
       <div className={styles.mobileMenu}>
         <Switch
           checked={darkMode}
           onChange={() => setDarkMode(!darkMode)}
-        style={{visibility:'hidden'}}
+          style={{ visibility: 'hidden' }}
         />
         <MenuOutlined onClick={() => setOpen(true)} />
       </div>
@@ -123,31 +123,31 @@ export default function Header() {
         onClose={() => setOpen(false)}
         closeIcon={<CloseOutlined style={{ color: '#fff', fontSize: 18 }} />}
         styles={{
-    body: {
-      backgroundColor: '#000',
-    },
-    header: {
-      backgroundColor: '#000',
-      borderBottom: '1px solid #222',
-    },
-  }}
+          body: {
+            backgroundColor: '#000',
+          },
+          header: {
+            backgroundColor: '#000',
+            borderBottom: '1px solid #222',
+          },
+        }}
       >
         <Link href="/" className={styles.navLink}>Home</Link><br />
         <Link href="/about" className={styles.navLink}>About Us</Link><br />
         <Link href="/faq" className={styles.navLink}>FAQ</Link><br />
         {!token && <><Link href="/login" className={styles.navLink}>Login</Link><br /></>}
-        {token&& <><Link href="#" className={styles.navLink}>Cards</Link><br />
-        <Link href="#" className={styles.navLink}>History</Link><br />
-        <Link href="#" className={styles.navLink}>Change Password</Link><br />
+        {token && <><Link href="#" className={styles.navLink}>Cards</Link><br />
+          <Link href="#" className={styles.navLink}>History</Link><br />
+          <Link href="#" className={styles.navLink}>Change Password</Link><br />
         </>}
 
-        {!token ?<Button type="primary" block style={{ marginTop: 2 }}>
+        {!token ? <Button type="primary" block style={{ marginTop: 2 }}>
           Sign Up
         </Button>
-        :
-        <Button color="danger" variant="solid" block style={{ marginTop: 2 }}>
-          Logout
-        </Button>}
+          :
+          <Button color="danger" variant="solid" block style={{ marginTop: 2 }}>
+            Logout
+          </Button>}
 
       </Drawer>
     </header>
