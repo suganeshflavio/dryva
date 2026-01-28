@@ -59,7 +59,7 @@ const HourlyOptions = [
 ];
 const containerStyle = {
   width: "100%",
-  height: "75vh",
+  height: "80vh",
   borderRadius: "8px",
 };
 
@@ -193,6 +193,7 @@ const AddRide: React.FC = () => {
       return;
     }
     console.log("values",values);
+    message.success("Searching rides...");
 
     const payload: EstimateTripPayload = {
       pickup: {
@@ -225,7 +226,6 @@ const AddRide: React.FC = () => {
       // setArrivalTime(response.approximate_arrival_time);
 
       setOpenRideModal(true);
-      message.success("Searching rides...");
     } catch (error: unknown) {
       if (error instanceof Error) {
         message.error(error.message);
@@ -450,6 +450,7 @@ const AddRide: React.FC = () => {
                 location={PickupLocation}
                 placeholder="Enter pickup location"
                 onSelect={onPickupSelect}
+                // size="middle"
               />
               {/* </Form.Item> */}
               {Stops.map((stop, index) => (

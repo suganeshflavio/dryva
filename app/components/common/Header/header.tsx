@@ -16,17 +16,17 @@ const items: MenuProps['items'] = [
   //   label: 'Profile',
   // },
   {
-    key: '1',
+    key: 'cards',
     label: 'Cards',
     icon: <CreditCardOutlined />,
   },
   {
-    key: '1',
+    key: 'history',
     label: 'History',
     icon: <CarOutlined />,
   },
   {
-    key: '2',
+    key: 'change-password',
     label: 'Change Password',
     icon: <LockOutlined />,
   },
@@ -34,7 +34,7 @@ const items: MenuProps['items'] = [
   //   type: 'divider',
   // },
   {
-    key: '3',
+    key: 'logout',
     label: 'Logout',
     icon: <LogoutOutlined />,
     danger: true,
@@ -56,15 +56,38 @@ const functionStyles: DropdownProps['styles'] = (info) => {
 };
 
 export default function Header() {
+  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+    switch (key) {
+      case 'cards':
+        router.push('/cards');
+        break;
+      case 'history':
+        router.push('/history');
+        break;
+      case 'change-password':
+        router.push('/change-password');
+        break;
+      case 'logout':
+        handleLogout();
+        break;
+      default:
+        break;
+    }
+  };
   const sharedProps: DropdownProps = {
-    menu: { items },
+    menu: { items, onClick: handleMenuClick },
     placement: 'bottomLeft',
     classNames: { root: styles.root },
   };
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
-
+  const handleLogout = () => {
+    sessionStorage.clear();
+    localStorage.clear();
+    setOpen(false);
+    router.push('/login'); // Redirect to login page after logout
+  };
   const router = useRouter();
   const NavSignup = () => {
     router.push("/signup");
@@ -96,7 +119,7 @@ export default function Header() {
           //   onChange={() => setDarkMode(!darkMode)}
           //   style={{visibility:'hidden'}}
           // />
-          <Dropdown {...sharedProps} styles={functionStyles} trigger={['click']}>
+          <Dropdown {...sharedProps} styles={functionStyles} trigger={['click']} >
             <Button type="primary" className={styles.signupBtn}>
               <Space>
                 {/* <UserOutlined /> */}
@@ -145,7 +168,7 @@ export default function Header() {
           Sign Up
         </Button>
           :
-          <Button color="danger" variant="solid" block style={{ marginTop: 2 }}>
+          <Button color="danger" variant="solid" block style={{ marginTop: 2 }} onClick={() => handleLogout}>
             Logout
           </Button>}
 

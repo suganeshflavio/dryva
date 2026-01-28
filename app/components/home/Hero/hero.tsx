@@ -123,6 +123,7 @@ export default function Hero() {
             location={PickupLocation}
             placeholder="Enter Pickup Location"
             onSelect={onPickupSelect}
+            size="large"
           />
 </div>
           {/* <Select

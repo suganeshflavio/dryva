@@ -10,6 +10,7 @@ type GooglePlacesComboBoxProps = {
   disabled?: boolean;
   onChange?: (value: string) => void;
   value?: string;
+  size?: "small" | "middle" | "large";
 };
 
 function debounce<T extends (...args: unknown[]) => void>(
@@ -26,6 +27,7 @@ function debounce<T extends (...args: unknown[]) => void>(
 }
 
 export default function GooglePlacesComboBox({
+  size = "middle",
   placeholder = "Search location...",
   onSelect,
   location,
@@ -125,12 +127,13 @@ const [inputValue, setInputValue] = useState("");
   return (
     <div className="relative">
       <Input
+        size={size}
         ref={inputRef}
         value={value ?? inputValue}
         type="text"
         disabled={disabled}
         // className="h-12 w-116 px-3 pr-0 text-lg font-medium border border-gray-300 dark:border-gray-600 rounded-xl bg-white/90 dark:bg-dark-900/90 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-md shadow-xl transition-all duration-200 ease-in-out disabled:bg-gray-100 disabled:dark:bg-dark-800 disabled:text-gray-500 disabled:cursor-not-allowed"
-        className="ant-input ant-input-lg w-96 h-8 rounded-sm pr-10 border border-gray-300 dark:border-gray-600 text-base font-medium bg-white/90 dark:bg-dark-900/90 text-gray-900 dark:text-white placeholdertext placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-400 backdrop-blur-md transition-all duration-200 ease-in-out disabled:bg-gray-100 disabled:dark:bg-dark-800 disabled:text-gray-500 disabled:cursor-not-allowed"
+        className="ant-input ant-input-lg w-96 rounded-sm pr-10 border border-gray-300 dark:border-gray-600 text-base font-medium bg-white/90 dark:bg-dark-900/90 text-gray-900 dark:text-white placeholdertext placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-400 backdrop-blur-md transition-all duration-200 ease-in-out disabled:bg-gray-100 disabled:dark:bg-dark-800 disabled:text-gray-500 disabled:cursor-not-allowed"
         placeholder={placeholder}
         // onChange={handleChange}
         onChange={(e) => {

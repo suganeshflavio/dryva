@@ -56,91 +56,91 @@ const ChooseRideModal: React.FC<Props> = ({ open, onClose, estimates, currency }
         lg: 520,
       }}
     >
-        {step === 'ride' && (
+      {step === 'ride' && (
         <>
-      <Title level={4}>Choose a Ride</Title>
+          <Title level={4}>Choose a Ride</Title>
 
-      <Space direction="vertical" size={16} style={{ width: '100%' }}>
-        {estimates.map((ride) => (
-          <Card
-            key={ride.vehicle_type_id}
-            hoverable
-            onClick={() => handleVehicleSelect(ride)}
+          <Space direction="vertical" size={16} style={{ width: '100%' }}>
+            {estimates.map((ride) => (
+              <Card
+                key={ride.vehicle_type_id}
+                hoverable
+                onClick={() => handleVehicleSelect(ride)}
+                style={{
+                  border:
+                    selected.vehicle_type_id === ride.vehicle_type_id
+                      ? '2px solid #fe9900'
+                      : '1px solid #f0f0f0',
+                  borderRadius: 12,
+                }}
+              >
+                <Row align="middle" gutter={16}>
+                  <Col>
+                    <img
+                      src={ride.icon_url}
+                      alt={ride.vehicle_name}
+                      style={{ width: 64 }}
+                    />
+                  </Col>
+
+                  <Col flex="auto">
+                    <Text strong>{ride.vehicle_name}</Text>
+                    <br />
+                    <Text type="secondary">{ride.estimated_duration_minutes} min</Text>
+                    <br />
+                    <Space size={6}>
+                      {/* <UserOutlined /> */}
+                      <Text>
+                        {/* {ride.capacity} */}
+                        {ride.distance.toFixed(2)} {ride.unit} away
+                      </Text>
+                    </Space>
+                  </Col>
+
+                  <Col>
+                    <Text strong>
+                      {ride.total_amount.toFixed(2)} <Text type="secondary">{currency}</Text>
+                    </Text>
+                  </Col>
+                </Row>
+              </Card>
+            ))}
+          </Space>
+
+          {/* Footer Actions */}
+          <div
             style={{
-              border:
-                selected.vehicle_type_id === ride.vehicle_type_id
-                  ? '2px solid #fe9900'
-                  : '1px solid #f0f0f0',
-              borderRadius: 12,
+              display: 'flex',
+              gap: 12,
+              marginTop: 24,
             }}
           >
-            <Row align="middle" gutter={16}>
-              <Col>
-                <img
-                  src={ride.icon_url}
-                  alt={ride.vehicle_name}
-                  style={{ width: 64 }}
-                />
-              </Col>
+            <Button block icon={<CreditCardOutlined />} onClick={() => setStep('card')}>
+              Select Card
+            </Button>
 
-              <Col flex="auto">
-                <Text strong>{ride.vehicle_name}</Text>
-                <br />
-                <Text type="secondary">{ride.estimated_duration_minutes} min</Text>
-                <br />
-                <Space size={6}>
-                  {/* <UserOutlined /> */}
-                  <Text>
-                    {/* {ride.capacity} */}
-                    {ride.distance.toFixed(2)} {ride.unit} away
-                    </Text>
-                </Space>
-              </Col>
-
-              <Col>
-                <Text strong>
-                  {ride.total_amount.toFixed(2)} <Text type="secondary">{currency}</Text>
-                </Text>
-              </Col>
-            </Row>
-          </Card>
-        ))}
-      </Space>
-
-      {/* Footer Actions */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 12,
-          marginTop: 24,
-        }}
-      >
-        <Button block icon={<CreditCardOutlined />} onClick={() => setStep('card')}>
-          Select Card
-        </Button>
-
-        <Button
-          block
-          type="primary"
-          style={{ background: '#fe9900' }}
-        >
-          Book Now ({selected.total_amount.toFixed(2)})
-        </Button>
-      </div>
-      </>
+            <Button
+              block
+              type="primary"
+              style={{ background: '#fe9900' }}
+            >
+              Book Now ({selected.total_amount.toFixed(2)})
+            </Button>
+          </div>
+        </>
       )}
-        {step === 'card' && (
+      {step === 'card' && (
         <>
-        <Space align="center" size={5}>
-        {/* <Button
+          <Space align="center" size={5}>
+            {/* <Button
               type="text"
               icon={<ArrowLeftOutlined />}
               onClick={() => setStep('ride')}
               style={{marginBottom:'15px'}}
             /> */}
-    <Title level={4}>Select Card</Title>
-    </Space>
-    <CardSelector onDone={() => setStep('ride')} selected={selected} />
+            {/* <Title level={4}>Select Card</Title> */}
+          </Space>
+          <CardSelector onDone={() => setStep('ride')} selected={selected} />
         </>
       )}
     </Modal>
