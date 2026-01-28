@@ -314,6 +314,9 @@ import {
 import './login.css';
 
 const { Title, Text } = Typography;
+export function removeCountryCode(phone: string): string {
+  return phone.replace(/^\+\d{1,2}/, '');
+}
 
 export default function LoginPage() {
   const [step, setStep] = useState<"mobile" | "otp">("mobile");
@@ -387,9 +390,10 @@ const [form] = Form.useForm();
 
     try {
       setLoading(true);
+      console.log("mobile",mobile);
 
       const response = await verifyOtp({
-        phone: mobile,
+        phone: removeCountryCode(mobile),
         otp,
       });
       sessionStorage.setItem("token", response.access_token);

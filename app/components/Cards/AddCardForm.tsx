@@ -1,16 +1,17 @@
 'use client';
 
 import React from 'react';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, Typography } from 'antd';
 
 interface Props {
   onCancel: () => void;
   onSave: (card: any) => void;
+  CardId: string | null;
 }
 
-const AddCardForm: React.FC<Props> = ({ onCancel, onSave }) => {
+const AddCardForm: React.FC<Props> = ({ onCancel, onSave, CardId }) => {
   const [form] = Form.useForm();
-
+  const { Title } = Typography;
   const formatCard = (v: string) =>
     v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
 
@@ -29,16 +30,17 @@ const AddCardForm: React.FC<Props> = ({ onCancel, onSave }) => {
 
   return (
     <Form layout="vertical" form={form}>
+    {/* <Title level={4}>Add Card</Title> */}
       <Form.Item
         label="Card Number"
         name="cardNumber"
         rules={[
-          { required: true },
-          { pattern: /^\d{4} \d{4} \d{4} \d{4}$/ },
+          { required: true, message: 'Please enter card number' },
+          { pattern: /^\d{4} \d{4} \d{4} \d{4}$/, message: 'Card number must be 16 digits'},
         ]}
       >
         <Input
-          placeholder="1234 5678 9012 3456"
+          placeholder="XXXX XXXX XXXX XXXX"
           maxLength={19}
           onChange={(e) =>
             form.setFieldsValue({ cardNumber: formatCard(e.target.value) })
@@ -52,8 +54,8 @@ const AddCardForm: React.FC<Props> = ({ onCancel, onSave }) => {
             label="Expiry"
             name="expiry"
             rules={[
-              { required: true },
-              { pattern: /^(0[1-9]|1[0-2])\/\d{2}$/ },
+              { required: true, message: 'Please enter expiry date' },
+              { pattern: /^(0[1-9]|1[0-2])\/\d{2}$/, message: 'Expiry must be in MM/YY format'},
             ]}
           >
             <Input
@@ -70,9 +72,9 @@ const AddCardForm: React.FC<Props> = ({ onCancel, onSave }) => {
           <Form.Item
             label="CVV"
             name="cvv"
-            rules={[{ required: true }, { pattern: /^\d{3}$/ }]}
+            rules={[{ required: true, message: 'Please enter CVV' }, { pattern: /^\d{3}$/, message: 'CVV must be 3 digits' }]}
           >
-            <Input.Password maxLength={3} />
+            <Input.Password maxLength={3} placeholder='XXX'/>
           </Form.Item>
         </Col>
       </Row>
