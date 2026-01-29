@@ -31,7 +31,6 @@ import { GetPlaceFromLatLng } from "@/app/utils/places";
 import { EstimateRide } from "@/app/api/Ride";
 import {
   EstimateTripPayload,
-  StopLocation,
   VehicleEstimate,
 } from "@/app/Types/AddRide";
 import ProtectedRoute from "@/app/utils/ProtectedRoute";
@@ -79,7 +78,7 @@ const AddRide: React.FC = () => {
   const [rideType, setRideType] = useState<string>("is_per_ride");
   const [Stops, setStops] = useState<LocationWithDescType[]>([]);
   const [PickupLocation, setPickupLocation] = useState<LocationType | null>(
-    null,
+    null
   );
   const [DropLocation, setDropLocation] = useState<LocationType | null>(null);
   const [LocationDesc, setLocationDesc] = useState<locationDescType>({
@@ -89,8 +88,6 @@ const AddRide: React.FC = () => {
   const [currency, setCurrency] = useState<string>("INR");
   const [estimates, setEstimates] = useState<VehicleEstimate[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
-  console.log("estimates", estimates);
 
   const [center, setCenter] = useState<google.maps.LatLngLiteral>({
     lat: 18.1096,
@@ -113,7 +110,6 @@ const AddRide: React.FC = () => {
     setVarReact((prev) => (prev === "outlined" ? "solid" : "outlined"));
   };
   const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
     setHourvalue(value);
   };
 
@@ -125,10 +121,25 @@ const AddRide: React.FC = () => {
       ]);
     }
   };
+useEffect(() => {
+  const pickup = sessionStorage.getItem("PickupLocation");
+  const drop = sessionStorage.getItem("DropLocation");
+  const desc = sessionStorage.getItem("LocationDesc");
+
+  if (pickup) {
+    setPickupLocation(JSON.parse(pickup));
+  }
+
+  if (drop) {
+    setDropLocation(JSON.parse(drop));
+  }
+
+  if (desc) {
+    setLocationDesc(JSON.parse(desc));
+  }
+}, []);
 
   const onPickupSelect = (place: google.maps.places.PlaceResult) => {
-    console.log("place selected", place);
-
     const lat = place.geometry?.location?.lat();
     const lng = place.geometry?.location?.lng();
     const address = place.formatted_address;
@@ -140,7 +151,6 @@ const AddRide: React.FC = () => {
     }
   };
   const onDropSelect = (place: google.maps.places.PlaceResult) => {
-    console.log("place selected", place);
     const lat = place.geometry?.location?.lat();
     const lng = place.geometry?.location?.lng();
     const address = place.formatted_address;
@@ -160,8 +170,6 @@ const AddRide: React.FC = () => {
             lng: position.coords.longitude,
           };
           setCenter(tempCenter);
-
-          console.log("Current Location:", tempCenter);
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -181,8 +189,6 @@ const AddRide: React.FC = () => {
   }, [form]);
 
   // const onFinish = (values: RideFormValues) => {
-  //   console.log("Ride Details:", values);
-  //     console.log("loca", LocationDesc," Pickup:", PickupLocation, " Drop:", DropLocation," Stops:", Stops,"LocationDesc",LocationDesc,"rideType",rideType,"VarReact",VarReact);
   //   EstimateRide()
   //     setOpenRideModal(true);
   //   message.success("Searching rides...");
@@ -192,7 +198,6 @@ const AddRide: React.FC = () => {
       message.error("Pickup and Drop locations are required");
       return;
     }
-    console.log("values",values);
     message.success("Searching rides...");
 
     const payload: EstimateTripPayload = {
@@ -204,7 +209,7 @@ const AddRide: React.FC = () => {
         lat: DropLocation.latitude ?? 0,
         lng: DropLocation.longitude ?? 0,
       },
-      is_round_trip: rideType === "solid" ? true : false,
+      is_round_trip: VarReact === "solid" && rideType != "is_hourly" ? true : false,
       is_hourly: rideType === "is_per_ride" ? false : true,
       total_hours: rideType === "is_hourly" ? Number(values.drop ?? 0) : 0,
       add_stop: Stops.map(
@@ -326,7 +331,6 @@ const AddRide: React.FC = () => {
     }
   }, [PickupLocation, DropLocation, Stops]);
   const onDropMarker = async (e: google.maps.MapMouseEvent) => {
-    console.log("marker selected", e);
     if (!e.latLng) return;
     const lat = e.latLng?.lat();
     const lng = e.latLng?.lng();
@@ -339,14 +343,12 @@ const AddRide: React.FC = () => {
     }
   };
   const onPickupMarker = async (e: google.maps.MapMouseEvent) => {
-    console.log("marker selected", e);
     if (!e.latLng) return;
     const lat = e.latLng?.lat();
     const lng = e.latLng?.lng();
     if (lat && lng) {
       setPickupLocation({ latitude: lat, longitude: lng });
       const address = await GetPlaceFromLatLng(lat, lng);
-      console.log("on pickup change", address);
       if (address && typeof address === "string") {
         setLocationDesc({ ...LocationDesc, pickup: address });
       }
@@ -450,7 +452,7 @@ const AddRide: React.FC = () => {
                 location={PickupLocation}
                 placeholder="Enter pickup location"
                 onSelect={onPickupSelect}
-                // size="middle"
+              // size="middle"
               />
               {/* </Form.Item> */}
               {Stops.map((stop, index) => (
@@ -563,7 +565,7 @@ const AddRide: React.FC = () => {
               {/* <Row gutter={12}> */}
               {/* <Col span={12}> */}
               <Form.Item
-              style={{marginTop:'20px'}}
+                style={{ marginTop: '20px' }}
                 name="small suitcase"
                 //   label="Passengers"
                 rules={[
@@ -726,6 +728,13 @@ const AddRide: React.FC = () => {
             onClose={() => setOpenRideModal(false)}
             estimates={estimates}
             currency={currency}
+            PickupLocation={PickupLocation}
+            DropLocation={DropLocation}
+            LocationDesc={LocationDesc}
+            Stops={Stops}
+            values={form.getFieldsValue()}
+            rideType={rideType}
+            VarReact={VarReact}
           />
         )}
         {/* RIGHT MAP */}

@@ -1,14 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button, Drawer, Dropdown, Space, Switch } from "antd";
 import Link from "next/link";
-import { useState } from "react";
 import styles from "./header.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { DropdownProps, MenuProps } from 'antd';
 import { DownOutlined, LogoutOutlined, CreditCardOutlined, LockOutlined, CarOutlined } from '@ant-design/icons';
+import { GetPassengerDetails } from "@/app/api/Ride";
 
 const items: MenuProps['items'] = [
   // {
@@ -18,16 +19,19 @@ const items: MenuProps['items'] = [
   {
     key: 'cards',
     label: 'Cards',
+    disabled: true,
     icon: <CreditCardOutlined />,
   },
   {
     key: 'history',
     label: 'History',
+    disabled: false,
     icon: <CarOutlined />,
   },
   {
     key: 'change-password',
     label: 'Change Password',
+    disabled: true,
     icon: <LockOutlined />,
   },
   // {
@@ -36,6 +40,7 @@ const items: MenuProps['items'] = [
   {
     key: 'logout',
     label: 'Logout',
+    disabled: false,
     icon: <LogoutOutlined />,
     danger: true,
   },
@@ -54,6 +59,24 @@ const functionStyles: DropdownProps['styles'] = (info) => {
   }
   return {};
 };
+
+interface UserDetails {
+  _id: string;
+  company_id: string;
+  stripe_customer_id: string;
+  payment_method_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  country_code: string;
+  flag_code: string;
+  currency_code: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string | null;
+};
+
 
 export default function Header() {
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
@@ -81,6 +104,8 @@ export default function Header() {
   };
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
+  const [userName, setUserName] = useState<UserDetails | null>(null);
+
   const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
   const handleLogout = () => {
     sessionStorage.clear();
@@ -92,6 +117,19 @@ export default function Header() {
   const NavSignup = () => {
     router.push("/signup");
   };
+  useEffect(() => {
+    if (token) {
+      const fetchUser = async () => {
+        try {
+          const res = await GetPassengerDetails();
+          setUserName(res);
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
+        }
+      };
+      fetchUser();
+    }
+  }, [token])
   return (
     <header className={`${styles.header} ${darkMode ? styles.dark : ""}`}>
       <div className={styles.logo}>
@@ -119,11 +157,11 @@ export default function Header() {
           //   onChange={() => setDarkMode(!darkMode)}
           //   style={{visibility:'hidden'}}
           // />
-          <Dropdown {...sharedProps} styles={functionStyles} trigger={['click']} >
+          <Dropdown {...sharedProps} styles={functionStyles} trigger={['click']}>
             <Button type="primary" className={styles.signupBtn}>
               <Space>
                 {/* <UserOutlined /> */}
-                Username
+                {userName?.first_name}{userName?.last_name}
                 <DownOutlined />
               </Space>
             </Button>
