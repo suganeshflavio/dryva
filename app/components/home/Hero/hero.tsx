@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import GooglePlacesComboBox from "@/app/utils/GoogleMapsAutoComplete";
 import { useState } from "react";
 import { LocationType } from "@/app/Types/Location";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { useJsApiLoader } from "@react-google-maps/api";
 
 type locationDescType = {
   pickup: string | null;
@@ -17,16 +17,15 @@ export default function Hero() {
   const [PickupLocation, setPickupLocation] = useState<LocationType | null>(
     null,
   );
-  console.log("PickupLocation", PickupLocation);
 
   const [LocationDesc, setLocationDesc] = useState<locationDescType>({
     pickup: null,
     drop: null,
   });
+  console.log("LocationDesc", LocationDesc);
   const [DropLocation, setDropLocation] = useState<LocationType | null>(null);
 
   const onPickupSelect = (place: google.maps.places.PlaceResult) => {
-    console.log("place selected", place);
 
     const lat = place.geometry?.location?.lat();
     const lng = place.geometry?.location?.lng();
@@ -39,7 +38,6 @@ export default function Hero() {
     }
   };
   const onDropSelect = (place: google.maps.places.PlaceResult) => {
-    console.log("place selected", place);
     const lat = place.geometry?.location?.lat();
     const lng = place.geometry?.location?.lng();
     const address = place.formatted_address;
@@ -50,7 +48,6 @@ export default function Hero() {
       }
     }
   };
-  console.log("locations", LocationDesc);
 
   const route = useRouter();
   const handleAdd = () => {
@@ -58,6 +55,9 @@ export default function Hero() {
       message.error("Pickup and Drop locations are required");
       return;
     }
+    sessionStorage.setItem("PickupLocation", JSON.stringify(PickupLocation));
+    sessionStorage.setItem("DropLocation", JSON.stringify(DropLocation));
+    sessionStorage.setItem("LocationDesc", JSON.stringify(LocationDesc));
     route.push("/addride");
   };
   const { isLoaded } = useJsApiLoader({
@@ -117,15 +117,15 @@ export default function Hero() {
       ]}
       style={{ width: '70%', height: '50px' }}
     /> */}
-    <div style={{ width: "71%" }}>
-          <GooglePlacesComboBox
-            disabled={false}
-            location={PickupLocation}
-            placeholder="Enter Pickup Location"
-            onSelect={onPickupSelect}
-            size="large"
-          />
-</div>
+          <div style={{ width: "71%" }}>
+            <GooglePlacesComboBox
+              disabled={false}
+              location={PickupLocation}
+              placeholder="Enter Pickup Location"
+              onSelect={onPickupSelect}
+              size="large"
+            />
+          </div>
           {/* <Select
       placeholder="Drop location"
       className={styles.select}
@@ -135,13 +135,13 @@ export default function Hero() {
       ]}
       style={{ width: '70%', height: '50px'}}
     /> */}
-    <div style={{ width: "71%", }}>
-          <GooglePlacesComboBox
-            // disabled={!PickupLocation?.latitude || !PickupLocation?.longitude}
-            location={DropLocation}
-            placeholder="Enter Drop Location"
-            onSelect={onDropSelect}
-          />
+          <div style={{ width: "71%", }}>
+            <GooglePlacesComboBox
+              // disabled={!PickupLocation?.latitude || !PickupLocation?.longitude}
+              location={DropLocation}
+              placeholder="Enter Drop Location"
+              onSelect={onDropSelect}
+            />
           </div>
         </div>
         <Button className={styles.signupBtn} onClick={handleAdd}>

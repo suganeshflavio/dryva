@@ -102,12 +102,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
-import { Button, Typography, Spin } from 'antd';
+import { Button, Typography, Spin, message } from 'antd';
+import { getHeaders } from '@/app/api/Header';
 
 const { Title } = Typography;
 
 let stripePromise = loadStripe(
-  'pk_test_51S2W2P3gG1fgcIolksBVuBGp9I2WOACduUVDp9eLhCS140XTpkWcCaMMwQxEMM2TGbDRaQ7QRonPKjzfayPD3LRu00nPhRkstQ'
+  `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
 );
 
 export default function AddCardStripe({
@@ -120,38 +121,35 @@ export default function AddCardStripe({
   const [stripe, setStripe] = useState<Stripe | null>(null);
   const [card, setCard] = useState<StripeCardElement | null>(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
   const cardRef = useRef<HTMLDivElement | null>(null);
 
-useEffect(() => {
-  const initStripe = async () => {
-    const stripeInstance = await stripePromise;
-    if (!stripeInstance || !cardRef.current) return;
+  useEffect(() => {
+    const initStripe = async () => {
+      const stripeInstance = await stripePromise;
+      if (!stripeInstance || !cardRef.current) return;
 
-    const elements = stripeInstance.elements();
-    const cardElement = elements.create('card', {
-      style: {
-        base: {
-          fontSize: '16px',
+      const elements = stripeInstance.elements();
+      const cardElement = elements.create('card', {
+        style: {
+          base: {
+            fontSize: '16px',
+          },
         },
-      },
-    });
+      });
 
-    cardElement.mount(cardRef.current);
+      cardElement.mount(cardRef.current);
 
-    setStripe(stripeInstance);
-    setCard(cardElement);
-  };
+      setStripe(stripeInstance);
+      setCard(cardElement);
+    };
 
-  initStripe();
-}, []);
+    initStripe();
+  }, []);
 
   const addCard = async () => {
     if (!stripe || !card) return;
-console.log('Stripe:', stripe);
-console.log('Card:', card);
     setLoading(true);
-    setMessage('');
 
     try {
       // 1️⃣ Create SetupIntent
@@ -168,10 +166,9 @@ console.log('Card:', card);
 
       const data = await res.json();
       const clientSecret = data.clientSecret || data.client_secret;
-console.log("nmn,kjhg");
-if (!clientSecret) {
-  setMessage('Missing client_secret');
-}
+      if (!clientSecret) {
+        message.error('Missing client_secret');
+      }
 
       const { setupIntent, error } = await stripe.confirmCardSetup(
         clientSecret,
@@ -181,12 +178,9 @@ if (!clientSecret) {
           },
         }
       );
-console.log('SetupIntent:', setupIntent);
-console.log('Stripe error:', error);
-console.log("nmn,kjhg");
 
       if (error) {
-        setMessage(error.message || 'Card verification failed');
+        message.error(error.message || 'Card verification failed');
         setLoading(false);
         return;
       }
@@ -198,18 +192,15 @@ console.log("nmn,kjhg");
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/dryva-passenger/payment/payment_method_id`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-          },
+          headers: getHeaders(),
           body: JSON.stringify({ payment_method_id: paymentMethodId }),
         }
       );
 
-      setMessage('✅ Card added successfully');
+      message.success('Card added successfully');
       setTimeout(onSave, 800);
     } catch {
-      setMessage('Server error');
+      message.error('Failed to add card');
     } finally {
       setLoading(false);
     }
@@ -220,7 +211,7 @@ console.log("nmn,kjhg");
       <Title level={4}>Add Card</Title>
 
       <div
-      ref={cardRef}
+        ref={cardRef}
         id="card-element"
         style={{
           padding: 12,
@@ -229,9 +220,6 @@ console.log("nmn,kjhg");
           marginBottom: 16,
         }}
       />
-
-      {message && <p>{message}</p>}
-
       <div style={{ display: 'flex', gap: 12 }}>
         <Button block onClick={onCancel}>
           Cancel

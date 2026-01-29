@@ -5,9 +5,7 @@ import { Card, Typography, Button, Space, message, Spin } from 'antd';
 import { CreditCardOutlined, PlusOutlined } from '@ant-design/icons';
 import AddCardForm from './AddCardForm';
 import { GetStoreCard } from '@/app/api/Ride';
-import { log } from 'console';
 import { CardDetails, VehicleEstimate } from '@/app/Types/AddRide';
-// import { SavedCard } from './types';
 
 const { Text, Title } = Typography;
 
@@ -21,9 +19,11 @@ interface SavedCard {
 interface Props {
   onDone: () => void;
   selected?: VehicleEstimate;
+  cardId: string | null;
+  onCardSelect: (cardId: string) => void;
 }
 
-const CardSelector: React.FC<Props> = ({ onDone, selected }) => {
+const CardSelector: React.FC<Props> = ({ onDone, selected, cardId, onCardSelect }) => {
   const [cards, setCards] = useState<CardDetails[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -39,8 +39,8 @@ const CardSelector: React.FC<Props> = ({ onDone, selected }) => {
   }
 
   const handleClick = (cardId: string) => {
-    console.log("Selected Card ID:", cardId);
     setCardId(cardId);
+    onCardSelect(cardId);
   }
 
   // if (showAddForm) {
@@ -59,10 +59,8 @@ const CardSelector: React.FC<Props> = ({ onDone, selected }) => {
     setIsloading(true);
     try {
       const res = await GetStoreCard();
-      console.log("Saved Cards", res);
       setCards(res);
     } catch (error: unknown) {
-      console.error("Failed to load cards", error);
       if (error instanceof Error) {
         setError(error.message);
       }
@@ -77,10 +75,8 @@ const CardSelector: React.FC<Props> = ({ onDone, selected }) => {
       setIsloading(true);
       try {
         const res = await GetStoreCard();
-        console.log("Saved Cards", res);
         setCards(res);
       } catch (error: unknown) {
-        console.error("Failed to load cards", error);
         if (error instanceof Error) {
           setError(error.message);
         }
@@ -108,7 +104,10 @@ const CardSelector: React.FC<Props> = ({ onDone, selected }) => {
           <Space direction="vertical" style={{ width: '100%' }} size={16}>
             <Title level={4}>Select Card</Title>
             {
-              isLoading && <Spin style={{ textAlign: 'center' }} />
+              isLoading &&
+              <div style={{ textAlign: 'center', padding: '80px 0' }}>
+                <Spin size="large" />
+              </div>
             }
             {cards.length > 0 ?
               cards.map((card) => (
@@ -131,7 +130,7 @@ const CardSelector: React.FC<Props> = ({ onDone, selected }) => {
                   </Space>
                 </Card>
               ))
-              : <Text type="danger" style={{ textAlign: 'center' }}>{error || 'No cards available'}</Text>}
+              : !isLoading && <Text type="danger" style={{ textAlign: 'center' }}>{error || 'No cards available'}</Text>}
 
             <Button
               icon={<PlusOutlined />}
