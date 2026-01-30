@@ -110,7 +110,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [userName, setUserName] = useState<UserDetails | null>(null);
-const [isCardOpen, setIsCardOpen] = useState(false);
+  const [isCardOpen, setIsCardOpen] = useState(false);
 
   const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
   const handleLogout = () => {
@@ -219,22 +219,21 @@ const [isCardOpen, setIsCardOpen] = useState(false);
 
       </Drawer>
       {/* {step === "card" && ( */}
-        <>
-          {/* <CardSelector
+
+        {/* <CardSelector
             onDone={() => setStep("ride")}
           /> */}
-          <Modal
-  open={isCardOpen}
-  onCancel={() => setIsCardOpen(false)}
-  footer={null}
-  width={700}
-  destroyOnClose
->
-  <CardSelector
-    onDone={() => setIsCardOpen(false)}
-  />
-</Modal>
-        </>
+        <Modal
+          open={isCardOpen}
+          onCancel={() => setIsCardOpen(false)}
+          footer={null}
+          width={700}
+        >
+          <CardSelector
+            onDone={() => setIsCardOpen(false)}
+          />
+        </Modal>
+
       {/* )} */}
     </header>
   );

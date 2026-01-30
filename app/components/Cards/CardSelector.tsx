@@ -135,9 +135,9 @@ const CardSelector: React.FC<Props> = ({ onDone, onCardSelect }) => {
               : !isLoading &&
               // <Text type="danger" style={{ textAlign: 'center' }}>{error || 'No cards available'}</Text>
               <div style={{ padding: "80px 0" }}>
-            <Empty description={error || 'No cards available'} />
-          </div>
-              }
+                <Empty description={error || 'No cards available'} />
+              </div>
+            }
 
             <Button
               icon={<PlusOutlined />}
@@ -147,12 +147,12 @@ const CardSelector: React.FC<Props> = ({ onDone, onCardSelect }) => {
               Add New Card
             </Button>
 
-            {pathname != "/history"&&<Button
+            {pathname === "/addride" && <Button
               type="primary"
               block
               style={{ background: '#fe9900' }}
               onClick={handleContinue}
-              // disabled={pathname === "/history"}
+            // disabled={pathname === "/history"}
             >
               Continue
             </Button>}
