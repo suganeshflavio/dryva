@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Button, Space, message, Spin } from 'antd';
+import { Card, Typography, Button, Space, message, Spin, Empty } from 'antd';
 import { CreditCardOutlined, PlusOutlined } from '@ant-design/icons';
 import AddCardForm from './AddCardForm';
 import { GetStoreCard } from '@/app/api/Ride';
-import { CardDetails, VehicleEstimate } from '@/app/Types/AddRide';
+import { CardDetails } from '@/app/Types/AddRide';
+import { usePathname } from "next/navigation";
 
 const { Text, Title } = Typography;
 
@@ -18,17 +19,18 @@ interface SavedCard {
 
 interface Props {
   onDone: () => void;
-  selected?: VehicleEstimate;
-  cardId: string | null;
-  onCardSelect: (cardId: string) => void;
+  // selected?: VehicleEstimate;
+  // cardId?: string | null;
+  onCardSelect?: (cardId: string) => void;
 }
 
-const CardSelector: React.FC<Props> = ({ onDone, selected, cardId, onCardSelect }) => {
+const CardSelector: React.FC<Props> = ({ onDone, onCardSelect }) => {
   const [cards, setCards] = useState<CardDetails[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [isLoading, setIsloading] = useState<Boolean>(false);
   const [CardId, setCardId] = useState<string | null>(null);
+  const pathname = usePathname();
 
   const handleContinue = () => {
     if (CardId === null) {
@@ -40,7 +42,7 @@ const CardSelector: React.FC<Props> = ({ onDone, selected, cardId, onCardSelect 
 
   const handleClick = (cardId: string) => {
     setCardId(cardId);
-    onCardSelect(cardId);
+    onCardSelect?.(cardId);
   }
 
   // if (showAddForm) {
@@ -130,7 +132,12 @@ const CardSelector: React.FC<Props> = ({ onDone, selected, cardId, onCardSelect 
                   </Space>
                 </Card>
               ))
-              : !isLoading && <Text type="danger" style={{ textAlign: 'center' }}>{error || 'No cards available'}</Text>}
+              : !isLoading &&
+              // <Text type="danger" style={{ textAlign: 'center' }}>{error || 'No cards available'}</Text>
+              <div style={{ padding: "80px 0" }}>
+            <Empty description={error || 'No cards available'} />
+          </div>
+              }
 
             <Button
               icon={<PlusOutlined />}
@@ -140,14 +147,15 @@ const CardSelector: React.FC<Props> = ({ onDone, selected, cardId, onCardSelect 
               Add New Card
             </Button>
 
-            <Button
+            {pathname != "/history"&&<Button
               type="primary"
               block
               style={{ background: '#fe9900' }}
               onClick={handleContinue}
+              // disabled={pathname === "/history"}
             >
               Continue
-            </Button>
+            </Button>}
           </Space>
         )}
     </>

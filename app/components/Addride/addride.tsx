@@ -95,6 +95,7 @@ const AddRide: React.FC = () => {
   });
   const [hasCentered, setHasCentered] = useState(false);
   const [map, setMap] = React.useState<google.maps.Map | null>(null);
+  console.log("map",map);
 
   const fitBounds = (points: { latitude: number; longitude: number }[]) => {
     if (!mapRef.current) return;
@@ -121,23 +122,24 @@ const AddRide: React.FC = () => {
       ]);
     }
   };
-useEffect(() => {
-  const pickup = sessionStorage.getItem("PickupLocation");
-  const drop = sessionStorage.getItem("DropLocation");
-  const desc = sessionStorage.getItem("LocationDesc");
+  
+// useEffect(() => {
+//   const pickup = sessionStorage.getItem("PickupLocation");
+//   const drop = sessionStorage.getItem("DropLocation");
+//   const desc = sessionStorage.getItem("LocationDesc");
 
-  if (pickup) {
-    setPickupLocation(JSON.parse(pickup));
-  }
+//   if (pickup) {
+//     setPickupLocation(JSON.parse(pickup));
+//   }
 
-  if (drop) {
-    setDropLocation(JSON.parse(drop));
-  }
+//   if (drop) {
+//     setDropLocation(JSON.parse(drop));
+//   }
 
-  if (desc) {
-    setLocationDesc(JSON.parse(desc));
-  }
-}, []);
+//   if (desc) {
+//     setLocationDesc(JSON.parse(desc));
+//   }
+// }, []);
 
   const onPickupSelect = (place: google.maps.places.PlaceResult) => {
     const lat = place.geometry?.location?.lat();
@@ -194,23 +196,30 @@ useEffect(() => {
   //   message.success("Searching rides...");
   // };
   const onFinish = async (values: RideFormValues) => {
-    if (!PickupLocation || !DropLocation) {
+    if(rideType != "is_hourly"){
+      if (!PickupLocation || !DropLocation) {
       message.error("Pickup and Drop locations are required");
       return;
     }
+  } else{
+    if (!PickupLocation) {
+      message.error("Pickup location is required");
+      return;
+    }
+  }
     message.success("Searching rides...");
 
     const payload: EstimateTripPayload = {
       pickup: {
-        lat: PickupLocation.latitude ?? 0,
-        lng: PickupLocation.longitude ?? 0,
+        lat: PickupLocation?.latitude ?? 0,
+        lng: PickupLocation?.longitude ?? 0,
       },
       drop: {
-        lat: DropLocation.latitude ?? 0,
-        lng: DropLocation.longitude ?? 0,
+        lat: DropLocation?.latitude ?? 0,
+        lng: DropLocation?.longitude ?? 0,
       },
       is_round_trip: VarReact === "solid" && rideType != "is_hourly" ? true : false,
-      is_hourly: rideType === "is_per_ride" ? false : true,
+      is_hourly: rideType === "is_hourly" ? true : false,
       total_hours: rideType === "is_hourly" ? Number(values.drop ?? 0) : 0,
       add_stop: Stops.map(
         (stop): LocationWithDescType => ({

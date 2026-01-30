@@ -14,6 +14,7 @@ export function mapRideHistory(apiResponse: any): {
       dateTime: ride.date_time,
       distance: `${ride.est_distance} ${ride.distance_units}`,
       location_description: ride.location_description || null,
+      route_image_url: ride.route_image_url || null,
       fare: ride.est_price,
       status: ride.status,
       passengers: ride.total_passengers,

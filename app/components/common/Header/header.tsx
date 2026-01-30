@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
-import { Button, Drawer, Dropdown, Space, Switch } from "antd";
+import { Button, Drawer, Dropdown, Modal, Space, Switch } from "antd";
 import Link from "next/link";
 import styles from "./header.module.css";
 import Image from "next/image";
@@ -10,6 +10,10 @@ import { useRouter } from "next/navigation";
 import type { DropdownProps, MenuProps } from 'antd';
 import { DownOutlined, LogoutOutlined, CreditCardOutlined, LockOutlined, CarOutlined } from '@ant-design/icons';
 import { GetPassengerDetails } from "@/app/api/Ride";
+import CardSelector from "../../Cards/CardSelector";
+
+
+type Step = "ride" | "card";
 
 const items: MenuProps['items'] = [
   // {
@@ -19,7 +23,7 @@ const items: MenuProps['items'] = [
   {
     key: 'cards',
     label: 'Cards',
-    disabled: true,
+    disabled: false,
     icon: <CreditCardOutlined />,
   },
   {
@@ -82,7 +86,8 @@ export default function Header() {
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
       case 'cards':
-        router.push('/cards');
+        // router.push('/cards');
+        setIsCardOpen(true);
         break;
       case 'history':
         router.push('/history');
@@ -105,6 +110,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [userName, setUserName] = useState<UserDetails | null>(null);
+const [isCardOpen, setIsCardOpen] = useState(false);
 
   const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
   const handleLogout = () => {
@@ -113,6 +119,7 @@ export default function Header() {
     setOpen(false);
     router.push('/login'); // Redirect to login page after logout
   };
+
   const router = useRouter();
   const NavSignup = () => {
     router.push("/signup");
@@ -211,6 +218,24 @@ export default function Header() {
           </Button>}
 
       </Drawer>
+      {/* {step === "card" && ( */}
+        <>
+          {/* <CardSelector
+            onDone={() => setStep("ride")}
+          /> */}
+          <Modal
+  open={isCardOpen}
+  onCancel={() => setIsCardOpen(false)}
+  footer={null}
+  width={700}
+  destroyOnClose
+>
+  <CardSelector
+    onDone={() => setIsCardOpen(false)}
+  />
+</Modal>
+        </>
+      {/* )} */}
     </header>
   );
 }

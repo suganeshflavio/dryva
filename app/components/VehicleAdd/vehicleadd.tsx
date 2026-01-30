@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Card,
@@ -11,7 +11,7 @@ import {
   Col,
   message,
 } from "antd";
-import { CreditCardOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { CreditCardOutlined } from "@ant-design/icons";
 import CardSelector from "../Cards/CardSelector";
 import { CreateTripPayload, VehicleEstimate } from "@/app/Types/AddRide";
 import { CreateTrip } from "@/app/api/Ride";
@@ -73,6 +73,17 @@ const ChooseRideModal: React.FC<Props> = ({
   };
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const offset = new Date().getTimezoneOffset();
+  const { date, time } = values;
+
+  // Combine date and time
+  const combinedDateTime = date
+    .hour(time.hour())
+    .minute(time.minute())
+    .second(0);
+
+  const formatted = combinedDateTime.format("YYYY-MM-DD HH:mm:ss");
+  console.log("formatted", formatted);
+
   const handleCreateTrip = async () => {
     // Logic to create trip with selected vehicle and payment method
     if (!selected) {
@@ -86,8 +97,8 @@ const ChooseRideModal: React.FC<Props> = ({
     const payload: CreateTripPayload = {
       small_suitcase: values.small_suitcase || "0",
       large_suitcase: values.large_suitcase || "0",
-      total_passengers: values.passengers || "1",
-      date_time: "2025-12-16 11:36:00",
+      total_passengers: String(values.passengers || "1"),
+      date_time: formatted,
       distance_units: selected.unit,
       est_distance: selected.distance,
       est_time: selected.estimated_duration_minutes,
@@ -95,7 +106,7 @@ const ChooseRideModal: React.FC<Props> = ({
       driver_mapping: null,
       is_round_trip:
         VarReact === "solid" && rideType != "is_hourly" ? true : false,
-      is_hourly: rideType === "is_per_ride" ? true : false,
+      is_hourly: rideType === "is_hourly" ? true : false,
       total_hours: rideType === "is_hourly" ? Number(values.drop ?? 0) : 0,
       payment_method_id: cardId,
       tz_str: timeZone,
@@ -246,8 +257,8 @@ const ChooseRideModal: React.FC<Props> = ({
           </Space>
           <CardSelector
             onDone={() => setStep("ride")}
-            selected={selected}
-            cardId={cardId}
+            // selected={selected}
+            // cardId={cardId}
             onCardSelect={setCardId}
           />
         </>

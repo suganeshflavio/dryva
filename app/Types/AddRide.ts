@@ -101,6 +101,7 @@ export interface Ride {
   dateTime: string;
   distance: string;
   fare: number;
+  route_image_url?: string | null;
   status: string;
   passengers: number;
   isHourly: boolean;

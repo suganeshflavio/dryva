@@ -85,23 +85,22 @@ const { Text } = Typography;
 
 export const RideCard: React.FC<{ ride: Ride }> = ({ ride }) => {
   const [expanded, setExpanded] = useState(false);
-  const formatDateTime = (dateTime: string): string => {
-    // Convert "YYYY-MM-DD HH:mm:ss" → ISO
-    const iso = dateTime.replace(" ", "T");
 
-    const date = new Date(iso);
+ const formatDateFromString = (dateStr: string) => {
+  // Ensure UTC by appending Z
+  const utcDateStr = dateStr.replace(" ", "T").replace(/\.\d+$/, "") + "Z";
+  const date = new Date(utcDateStr);
 
-    const formattedDate = date.toLocaleDateString("en-US");
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
-
-    return `${formattedDate} , ${formattedTime}`;
-  };
-
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  }).format(date);
+};
   return (
     <Card
       hoverable
@@ -121,7 +120,7 @@ export const RideCard: React.FC<{ ride: Ride }> = ({ ride }) => {
 
         <Col xs={12} md={6}>
           <Text strong>Date & Time</Text>
-          <div>{formatDateTime(ride.dateTime)}</div>
+          <div>{formatDateFromString(ride.dateTime)}</div>
         </Col>
 
         <Col xs={12} md={4}>
@@ -173,6 +172,18 @@ export const RideCard: React.FC<{ ride: Ride }> = ({ ride }) => {
             <Text strong>Round Trip</Text>
             <div>{ride.isRoundTrip ? "Yes" : "No"}</div>
           </Col>
+          {/* {ride?.route_image_url && */}
+          {ride.route_image_url && <Col xs={24}>
+            <Text strong>Route Image</Text>
+            <div className="mt-2">
+              {ride.route_image_url ? (
+                <img src={ride.route_image_url} alt="Route" width="30%"  />
+              ) : (
+                <div>No route image available</div>
+              )}
+            </div>
+          </Col>}
+          {/* } */}
         </Row>
       )}
 

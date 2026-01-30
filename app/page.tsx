@@ -14,20 +14,13 @@ export default function HomePage() {
     const router = useRouter();
 
   useEffect(() => {
-    router.prefetch("/abiut");
+    router.prefetch("/about");
     router.prefetch("/history");
     router.prefetch("/addride");
     router.prefetch("/");
     router.prefetch("/login");
     router.prefetch("/signup");
     router.prefetch("/faq");
-    router.prefetch("/SellerForm");
-    router.prefetch("/ShopList");
-    router.prefetch("/ShopDetails");
-    router.prefetch("/Profile");
-    router.prefetch("/TermsandCondition");
-    router.prefetch("/About");
-    router.prefetch("/PrivacyPolicy");
   }, []);
   return (
     <>
